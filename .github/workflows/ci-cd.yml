@@ -1,0 +1,81 @@
+      # --- Email notification on failure or success ---
+      - name: Send email notification
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: >
+            [CI/CD] ${{ github.repository }} build ${{ job.status }}
+          to: ${{ secrets.NOTIFY_EMAIL_TO }}
+          from: ${{ secrets.NOTIFY_EMAIL_FROM }}
+          body: |
+            Workflow: ${{ github.workflow }}
+            Status: ${{ job.status }}
+            Commit: ${{ github.sha }}
+            Ref: ${{ github.ref }}
+            Triggered by: ${{ github.actor }}
+            See details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+# GitHub Actions workflow for CI/CD: test, build, and deploy FastAPI + React app
+# - Runs on push to main or PR
+# - Installs Python and Node.js, runs backend and frontend tests
+# - Deploy step is a placeholder (replace with your cloud provider's action)
+
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        working-directory: ./
+
+      - name: Run backend tests
+        run: pytest tests --maxfail=3 --disable-warnings -v
+        working-directory: ./
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend-react
+
+      - name: Run frontend build
+        run: npm run build
+        working-directory: ./frontend-react
+
+      - name: Run frontend tests (if any)
+        run: npm test -- --watchAll=false || true
+        working-directory: ./frontend-react
+
+      # --- Deploy to Fly.io ---
+      - name: Deploy to Fly.io
+        uses: superfly/flyctl-actions@1.4
+        with:
+          args: "deploy --remote-only"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

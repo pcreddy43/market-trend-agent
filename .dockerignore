@@ -1,0 +1,17 @@
+# .dockerignore for smaller, faster builds
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+.env
+.env.*
+node_modules/
+frontend-react/node_modules/
+frontend-react/build/
+.git
+.gitignore
+.vscode
+.DS_Store

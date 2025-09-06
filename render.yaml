@@ -1,0 +1,20 @@
+# Render.com deployment configuration for FastAPI and Streamlit
+services:
+  - type: web
+    name: market-trend-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000
+  - type: web
+    name: market-trend-dashboard
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run frontend/dashboard.py --server.port 8501 --server.address 0.0.0.0
+    plan: free
+    envVars:
+      - key: API_URL
+        value: https://market-trend-api.onrender.com

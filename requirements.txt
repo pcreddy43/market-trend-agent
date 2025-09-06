@@ -1,0 +1,28 @@
+# Open-source multi-agent market trend system
+# Requirements for MVP (LangGraph, yfinance, newspaper3k, TimescaleDB, etc.)
+langgraph
+networkx
+yfinance
+newspaper3k
+psycopg2-binary
+SQLAlchemy
+pandas
+python-dotenv
+scrapy
+playwright
+sentence-transformers
+faiss-cpu
+spacy
+xgboost
+streamlit
+redis
+fastapi
+uvicorn
+requests
+# Add to requirements.txt for cloud deployment and dashboard features
+textblob
+plotly
+# Add lxml_html_clean for newspaper3k and lxml compatibility
+lxml_html_clean
+# Add praw for Reddit API support
+praw
