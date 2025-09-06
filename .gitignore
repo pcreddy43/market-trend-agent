@@ -1,0 +1,4 @@
+node_modules/
+.cache/
+frontend-react/node_modules/
+frontend-react/.cache/
