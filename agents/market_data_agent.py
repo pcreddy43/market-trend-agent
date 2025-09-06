@@ -34,12 +34,19 @@ class MarketDataAgent(BaseAgent):
         return pd.DataFrame()
 
     def add_technical_indicators(self, df):
-        # Add simple moving average, RSI, etc.
+        # Add simple moving average, RSI, etc. (handle multi-column DataFrames)
         if df.empty:
             return df
         df = df.copy()
-        df['SMA_20'] = df['Close'].astype(float).rolling(window=20).mean()
-        df['RSI_14'] = self.compute_rsi(df['Close'].astype(float), 14)
+        # If 'Close' is a DataFrame (multi-ticker), apply per column
+        if isinstance(df['Close'], pd.DataFrame) or (hasattr(df['Close'], 'columns') and len(df['Close'].columns) > 1):
+            for ticker in df['Close'].columns:
+                df[('SMA_20', ticker)] = df['Close'][ticker].astype(float).rolling(window=20).mean()
+                df[('RSI_14', ticker)] = self.compute_rsi(df['Close'][ticker].astype(float), 14)
+        else:
+            # Single ticker (Series)
+            df['SMA_20'] = df['Close'].astype(float).rolling(window=20).mean()
+            df['RSI_14'] = self.compute_rsi(df['Close'].astype(float), 14)
         return df
 
     def compute_rsi(self, series, period=14):

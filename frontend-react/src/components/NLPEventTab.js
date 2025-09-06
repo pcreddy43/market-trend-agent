@@ -4,7 +4,7 @@ import { TextField, Button, Box, CircularProgress, Typography, Card as MuiCard, 
 import { Card, Statistic, Tooltip } from 'antd';
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined';
 import ClusterOutlined from '@ant-design/icons/ClusterOutlined';
-import ReactWordcloud from 'react-wordcloud';
+// import ReactWordcloud from 'react-wordcloud';
 import { saveAs } from 'file-saver';
 import Papa from 'papaparse';
 import { DashboardContext } from '../App';
@@ -101,8 +101,9 @@ export default function NLPEventTab() {
       {!loading && data && (
         <Card style={{ marginTop: 24 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>Entities Word Cloud</Typography>
-          {cloudType === 'entities' && (entityWords.length > 0 ? <ReactWordcloud words={entityWords} callbacks={{ onWordClick: handleWordClick }} /> : <Typography>No entities found.</Typography>)}
-          {cloudType === 'keyphrases' && (keyPhraseWords.length > 0 ? <ReactWordcloud words={keyPhraseWords} callbacks={{ onWordClick: handleWordClick }} /> : <Typography>No key phrases found.</Typography>)}
+          {/* Word cloud feature temporarily disabled due to react-wordcloud incompatibility with React 19 */}
+          {cloudType === 'entities' && (entityWords.length > 0 ? <Typography>Word cloud unavailable (React 19 incompatibility).</Typography> : <Typography>No entities found.</Typography>)}
+          {cloudType === 'keyphrases' && (keyPhraseWords.length > 0 ? <Typography>Word cloud unavailable (React 19 incompatibility).</Typography> : <Typography>No key phrases found.</Typography>)}
           <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>Sentiment</Typography>
           <Typography variant="body2" sx={{ mb: 2 }}>{data && data.sentiment !== undefined ? data.sentiment : 'N/A'}</Typography>
         </Card>

@@ -4,7 +4,7 @@ import { TextField, Button, Box, CircularProgress, Typography, Card as MuiCard, 
 import { Card, Statistic, Timeline, Tooltip } from 'antd';
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined';
 import { ApartmentOutlined, UserOutlined, GithubOutlined } from '@ant-design/icons';
-import { Bar } from '@ant-design/charts';
+import { Bar } from '@ant-design/plots';
 import { saveAs } from 'file-saver';
 import Papa from 'papaparse';
 import { Area } from '@ant-design/plots';

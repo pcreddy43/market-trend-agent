@@ -8,6 +8,7 @@ import MarketDataTab from './components/MarketDataTab';
 import NewsTab from './components/NewsTab';
 import SECFilingsTab from './components/SECFilingsTab';
 import SocialSentimentTab from './components/SocialSentimentTab';
+import CombinedSentimentTab from './components/CombinedSentimentTab';
 import MacroTab from './components/MacroTab';
 import CompanyEventsTab from './components/CompanyEventsTab';
 import StartupSignalsTab from './components/StartupSignalsTab';
@@ -22,6 +23,7 @@ const tabComponents = {
   news: <NewsTab />,
   sec: <SECFilingsTab />,
   sentiment: <SocialSentimentTab />,
+  combinedsentiment: <CombinedSentimentTab />,
   macro: <MacroTab />,
   events: <CompanyEventsTab />,
   startup: <StartupSignalsTab />,

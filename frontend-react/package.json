@@ -3,15 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/plots": "^1.2.6",
+    "@babel/runtime": "^7.28.4",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.14",
     "@mui/x-data-grid": "^6.17.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.1",
+    "antd": "^5.13.0",
     "axios": "^1.6.8",
+    "eslint-plugin-jest": "^29.0.1",
+    "file-saver": "^2.0.5",
+    "html-webpack-plugin": "^5.6.4",
+    "lodash": "^4.17.21",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
-    "recharts": "^2.8.0"
+    "recharts": "^2.8.0",
+    "webpack": "^5.101.3",
+    "webpack-dev-server": "^5.2.2"
   },
   "scripts": {
     "start": "react-scripts start",

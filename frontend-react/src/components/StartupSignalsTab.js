@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { fetchStartupSignals } from '../api';
 import { TextField, Button, Box, CircularProgress, Typography, Card as MuiCard, Skeleton } from '@mui/material';
 import { Card, Statistic, Tooltip } from 'antd';
-import { Line, Bar } from '@ant-design/charts';
+import { Line, Bar } from '@ant-design/plots';
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined';
 import RocketOutlined from '@ant-design/icons/RocketOutlined';
 import { saveAs } from 'file-saver';

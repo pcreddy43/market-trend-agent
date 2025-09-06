@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from 'antd';
-import { Stock, Line } from '@ant-design/charts';
+import { Stock, Line } from '@ant-design/plots';
 
 // Expects data: [{date, open, close, high, low, volume, SMA_20, RSI_14, ...}]
 export default function MarketDataChart({ data = [] }) {

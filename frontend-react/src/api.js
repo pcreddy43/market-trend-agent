@@ -1,11 +1,11 @@
+import axios from 'axios';
+// Centralized API utility for all agent calls
 export const fetchESGSignals = (company) => {
   return axios.post(withMock(`${API_URL}/esgsignals/run`), { company });
 };
 export const fetchPatentSignals = (company) => {
   return axios.post(withMock(`${API_URL}/patentsignals/run`), { company });
 };
-// Centralized API utility for all agent calls
-import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 let mockMode = true;
@@ -61,6 +61,15 @@ export const fetchStartupSignals = (repo, company) => {
 
 export const fetchNLPEvent = (text) => {
   return axios.post(withMock(`${API_URL}/nlpevent/run`), { text });
+};
+
+export const fetchCombinedSentiment = (tickers) => {
+  const tickerList = typeof tickers === 'string'
+    ? tickers.split(',').map(t => t.trim()).filter(Boolean)
+    : Array.isArray(tickers) ? tickers : [];
+  return axios.post(withMock(`${API_URL}/combinedsentiment/run`), {
+    tickers: tickerList
+  });
 };
 
 // Add similar functions for other agents as you build out the UI

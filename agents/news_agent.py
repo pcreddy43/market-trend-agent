@@ -7,6 +7,16 @@ import pandas as pd
 from .base_agent import BaseAgent
 import scrapy
 from scrapy.crawler import CrawlerProcess
+import multiprocessing
+
+def crawl_worker(seed_urls, result_queue):
+    from scrapy.crawler import CrawlerProcess
+    from agents.news_agent import NewsSpider  # Adjust import if needed
+    process = CrawlerProcess(settings={"LOG_ENABLED": False})
+    spider = NewsSpider
+    process.crawl(spider, urls=seed_urls)
+    process.start()
+    result_queue.put(spider.results if hasattr(spider, 'results') else seed_urls)
 
 class NewsSpider(scrapy.Spider):
     name = "news_spider"
@@ -29,12 +39,17 @@ class NewsAgent(BaseAgent):
     def crawl_urls(self, seed_urls):
         """
         Use Scrapy to crawl and collect article URLs from seed pages.
+        Runs the crawl in a subprocess to avoid Twisted reactor reuse errors.
         """
-        process = CrawlerProcess(settings={"LOG_ENABLED": False})
-        spider = NewsSpider
-        process.crawl(spider, urls=seed_urls)
-        process.start()
-        return spider.results if hasattr(spider, 'results') else seed_urls
+        result_queue = multiprocessing.Queue()
+        p = multiprocessing.Process(target=crawl_worker, args=(seed_urls, result_queue))
+        p.start()
+        p.join()
+        try:
+            results = result_queue.get(timeout=10)
+        except Exception:
+            results = seed_urls
+        return results
 
 
     def fetch_rss(self, rss_urls):

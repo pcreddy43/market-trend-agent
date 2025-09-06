@@ -36,3 +36,6 @@ PORT = "8080"
     timeout = 2000
     grace_period = "5s"
     restart_limit = 0
+
+[vm]
+  memory = 512

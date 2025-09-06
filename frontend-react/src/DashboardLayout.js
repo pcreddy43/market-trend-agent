@@ -14,16 +14,17 @@ import {
 const { Header, Content, Sider } = Layout;
 
 const menuItems = [
-  { key: 'overview', icon: <PieChartOutlined />, label: 'Insights Overview' },
-  { key: 'insights', icon: <BarChartOutlined />, label: 'Top Picks' },
-  { key: 'market', icon: <PieChartOutlined />, label: 'Market Data' },
-  { key: 'news', icon: <FileTextOutlined />, label: 'News' },
-  { key: 'sec', icon: <BarChartOutlined />, label: 'SEC Filings' },
-  { key: 'sentiment', icon: <MessageOutlined />, label: 'Social Sentiment' },
-  { key: 'macro', icon: <GlobalOutlined />, label: 'Macro' },
-  { key: 'events', icon: <ApartmentOutlined />, label: 'Company Events' },
-  { key: 'startup', icon: <RocketOutlined />, label: 'Startup Signals' },
-  { key: 'nlp', icon: <ClusterOutlined />, label: 'NLP Extraction' },
+  { key: 'overview', icon: <PieChartOutlined />, label: 'Insights Overview', style: { background: 'linear-gradient(90deg, #f7971e 0%, #ffd200 100%)', color: '#222', fontWeight: 600 } },
+  { key: 'insights', icon: <BarChartOutlined />, label: 'Top Picks', style: { background: 'linear-gradient(90deg, #00c6ff 0%, #0072ff 100%)', color: '#fff', fontWeight: 600 } },
+  { key: 'market', icon: <PieChartOutlined />, label: 'Market Data', style: { background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)', color: '#fff', fontWeight: 600 } },
+  { key: 'news', icon: <FileTextOutlined />, label: 'News', style: { background: 'linear-gradient(90deg, #f953c6 0%, #b91d73 100%)', color: '#fff', fontWeight: 600 } },
+  { key: 'sec', icon: <BarChartOutlined />, label: 'SEC Filings', style: { background: 'linear-gradient(90deg, #ee9ca7 0%, #ffdde1 100%)', color: '#222', fontWeight: 600 } },
+  { key: 'sentiment', icon: <MessageOutlined />, label: 'Social Sentiment', style: { background: 'linear-gradient(90deg, #f7971e 0%, #ffd200 100%)', color: '#222', fontWeight: 600 } },
+  { key: 'combinedsentiment', icon: <BarChartOutlined />, label: 'Combined Sentiment', style: { background: 'linear-gradient(90deg, #00c6ff 0%, #0072ff 100%)', color: '#fff', fontWeight: 600 } },
+  { key: 'macro', icon: <GlobalOutlined />, label: 'Macro', style: { background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)', color: '#fff', fontWeight: 600 } },
+  { key: 'events', icon: <ApartmentOutlined />, label: 'Company Events', style: { background: 'linear-gradient(90deg, #f953c6 0%, #b91d73 100%)', color: '#fff', fontWeight: 600 } },
+  { key: 'startup', icon: <RocketOutlined />, label: 'Startup Signals', style: { background: 'linear-gradient(90deg, #ee9ca7 0%, #ffdde1 100%)', color: '#222', fontWeight: 600 } },
+  { key: 'nlp', icon: <ClusterOutlined />, label: 'NLP Extraction', style: { background: 'linear-gradient(90deg, #f7971e 0%, #ffd200 100%)', color: '#222', fontWeight: 600 } },
 ];
 
 export default function DashboardLayout({ selectedKey, onMenuChange, children }) {
@@ -41,8 +42,8 @@ export default function DashboardLayout({ selectedKey, onMenuChange, children })
           mode="inline"
           selectedKeys={[selectedKey]}
           onClick={({ key }) => onMenuChange(key)}
-          items={menuItems}
-          style={{ height: '100%', borderRight: 0 }}
+          items={menuItems.map(item => ({ ...item, label: <span style={item.style}>{item.label}</span> }))}
+          style={{ height: '100%', borderRight: 0, fontWeight: 600 }}
         />
       </Sider>
       <Layout>

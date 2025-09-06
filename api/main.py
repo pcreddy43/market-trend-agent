@@ -36,11 +36,11 @@ from agents.insights_agent import InsightsAgent
 from agents.market_data_agent import MarketDataAgent
 from agents.news_agent import NewsAgent
 from agents.sec_filings_agent import SECFilingsAgent
-from agents.social_sentiment_agent import SocialSentimentAgent
 from agents.supply_chain_macro_agent import SupplyChainMacroAgent
 from agents.company_event_hiring_agent import CompanyEventHiringAgent
 from agents.startup_signals_agent import StartupSignalsAgent
 from agents.nlp_event_extraction_agent import NLPEventExtractionAgent
+from agents.combined_sentiment_agent import CombinedSentimentAgent
 
 # --- Structured Logging Setup ---
 logger = logging.getLogger("api")
@@ -69,7 +69,8 @@ app.state.limiter = limiter
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
     return JSONResponse(status_code=429, content={"detail": "Rate limit exceeded"})
-app.middleware("http")(limiter.middleware)
+from slowapi.middleware import SlowAPIMiddleware
+app.add_middleware(SlowAPIMiddleware)
 
 
  # --- Request Models ---
@@ -125,7 +126,6 @@ async def run_insights(req: InsightsRequest, request: Request):
     await asyncio.to_thread(MarketDataAgent().run, state)
     await asyncio.to_thread(NewsAgent().run, state)
     await asyncio.to_thread(SECFilingsAgent().run, state)
-    await asyncio.to_thread(SocialSentimentAgent().run, state)
     await asyncio.to_thread(SupplyChainMacroAgent().run, state)
     await asyncio.to_thread(CompanyEventHiringAgent().run, state)
     await asyncio.to_thread(StartupSignalsAgent().run, state)
@@ -227,32 +227,6 @@ async def run_sec_filings(req: SECFilingsRequest, request: Request):
         "sec_filings_insights": state.get('sec_filings_insights', "")
     }
 
-async def run_social_sentiment(req: SocialSentimentRequest, request: Request):
-    logger.info(f"[API] /socialsentiment/run called from {request.client.host} with {req.dict()}")
-    agent = SocialSentimentAgent()
-    state = req.dict()
-    await asyncio.to_thread(agent.run, state)
-    logger.info(f"[API] /socialsentiment/run completed")
-    return {
-        "status": "success",
-        "result": state.get('social_mentions', []),
-        "social_sentiment_insights": state.get('social_sentiment_insights', "")
-    }
-@app.post("/socialsentiment/run", summary="Run Social Sentiment Agent", response_model=dict, tags=["Agents"])
-async def run_social_sentiment(req: SocialSentimentRequest, request: Request):
-    logger.info(f"[API] /socialsentiment/run called from {request.client.host} with {req.dict()}")
-    if request.query_params.get("mock") == "1":
-        logger.info("[API] /socialsentiment/run returning MOCK_SOCIAL")
-        return {"status": "success", **MOCK_SOCIAL}
-    agent = SocialSentimentAgent()
-    state = req.dict()
-    await asyncio.to_thread(agent.run, state)
-    logger.info(f"[API] /socialsentiment/run completed")
-    return {
-        "status": "success",
-        "result": state.get('social_mentions', []),
-        "social_sentiment_insights": state.get('social_sentiment_insights', "")
-    }
 
 async def run_macro(req: MacroRequest, request: Request):
     logger.info(f"[API] /macro/run called from {request.client.host} with {req.dict()}")
@@ -360,6 +334,21 @@ async def run_nlp_event(req: NLPEventRequest, request: Request):
         "status": "success",
         "result": state.get('extracted_events', {}),
         "nlp_event_insights": state.get('nlp_event_insights', "")
+    }
+
+class CombinedSentimentRequest(BaseModel):
+    tickers: List[str]
+
+@app.post("/combinedsentiment/run", summary="Run Combined Sentiment Agent (StockTwits + News)", response_model=dict, tags=["Agents"])
+async def run_combined_sentiment(req: CombinedSentimentRequest, request: Request):
+    logger.info(f"[API] /combinedsentiment/run called from {request.client.host} with {req.dict()}")
+    agent = CombinedSentimentAgent()
+    state = req.dict()
+    await asyncio.to_thread(agent.run, state)
+    logger.info(f"[API] /combinedsentiment/run completed")
+    return {
+        "status": "success",
+        "result": state.get('combined_sentiment', {})
     }
 
 @app.get("/health")
